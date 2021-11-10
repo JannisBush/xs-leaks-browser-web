@@ -1,0 +1,13 @@
+\begin{tabular}{lllll}
+\toprule
+                                 &                             &       Origin? &       Site? &                Explanation \\
+Origin A & Origin B &               &             &                            \\
+\midrule
+https://demo.websec.saarland:443 & https://demo.websec.saarland:443 &   Same-Origin &   Same-Site &                Exact match \\
+                                 & https://demo.websec.saarland &   Same-Origin &   Same-Site &  HTTPS default port is 443 \\
+                                 & http://demo.websec.saarland:443 &  Cross-Origin &   Same-Site &           Different scheme \\
+                                 & https://demo.websec.saarland:80 &  Cross-Origin &   Same-Site &             Different port \\
+                                 & https://not.websec.saarland:443 &   Cross-Orgin &   Same-Site &        Different subdomain \\
+                                 & https://secweb.saarland:443 &  Cross-Origin &  Cross-Site &             Different site \\
+\bottomrule
+\end{tabular}

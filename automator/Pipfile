@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+pillow = "*"
+moviepy = "*"
+selenium = "==4.0.0.b3"
+#tbselenium = "*"
+numpy = "*"
+tqdm = "*"
+requests = "*"
+celery = "*"
+redis = "*"
+h2o = "==3.32.1.3"
+pandas = "*"
+psycopg2 = "*"
+watchdog = {extras = ["watchmedo"], version = "*"}
+pytest = "*"
+publicsuffix2 = "*"
+tranco = "*"
+pytest-timeout = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

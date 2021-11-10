@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <script>
+
+        // OP-WindowProperties
+        win = null;
+        function leakOP_WindowProperties() {
+          if (win === null) {
+            win = window.open("");
+          }
+
+          //win.location = "http://localhost:8000/echo/?cross-origin-opener-policy=same-origin";
+          win.location = "http://localhost:8000/echo/";
+
+          setTimeout(function() {
+            try {              
+              console.log(`Window length: ${win.window.frames.length}`);
+
+              // Generates security exception in Chrome 
+              // In Firefox returns restricted location?
+              console.log(win.location);
+              // This throws a security exception in firefox too
+              // SecurityError: Permission denied to access property Symbol.toPrimitive on cross-origin object
+              console.log(`Location: ${win.window.location}`);
+            } catch(e) {
+              console.log(`Error: ${e}`)
+            } finally {
+              win.close();
+            }
+          }, 1000);
+        };
+        leakOP_WindowProperties();
+
+  </script>
+  <body>
+
+  </body>
+
+</html>

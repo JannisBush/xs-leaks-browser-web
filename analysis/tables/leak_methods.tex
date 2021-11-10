@@ -1,0 +1,37 @@
+\begin{tabular}{ll}
+\toprule
+                leak method &                                                             leak code \\
+\midrule
+                 event\_list &                                                  list of events fired \\
+                  event\_set &                                                   set of events fired \\
+                 load\_count &                                           number of load events fired \\
+             op\_frame\_count &                                                            win.length \\
+              op\_win\_window &                                                            win.window \\
+      op\_win\_CSS2Properties &                                                    win.CSS2Properties \\
+              op\_win\_origin &                                                            win.origin \\
+              op\_win\_opener &                                                            win.opener \\
+      op\_win\_history\_length &               win.location.replace('about:blank'); win.history.length \\
+               op\_el\_height &                                                             el.height \\
+                op\_el\_width &                                                              el.width \\
+        op\_el\_naturalHeight &                                                      el.naturalHeight \\
+         op\_el\_naturalWidth &                                                       el.naturalWidth \\
+           op\_el\_videoWidth &                                                         el.videoWidth \\
+          op\_el\_videoHeight &                                                        el.videoHeight \\
+             op\_el\_duration &                                                           el.duration \\
+         op\_el\_networkState &                                                       el.networkState \\
+           op\_el\_readyState &                                                         el.readyState \\
+             op\_el\_buffered &                                                           el.buffered \\
+               op\_el\_paused &                                                             el.paused \\
+             op\_el\_seekable &                                                           el.seekable \\
+                op\_el\_sheet &                                                              el.sheet \\
+          op\_el\_media\_error &                                                              el.error \\
+      op\_el\_contentDocument &                                                    el.contentDocument \\
+          gp\_window\_onerror &                                           window.onerror = function() \\
+           gp\_window\_onblur &                                            window.onblur = function() \\
+      gp\_window\_postMessage &                       window.addEventListener('message', funcction()) \\
+ gp\_window\_getComputedStyle &           window.getComputedStyle(css\_test).getPropertyValue('color') \\
+   gp\_window\_hasOwnProperty &                                            window.hasOwnProperty('a') \\
+ gp\_download\_bar\_height\_bin &  start = window.innerHeight; load(); bar = start - window.innerHeight \\
+ gp\_securitypolicyviolation &        window.addEventListener('securitypolicyviolation', function()) \\
+\bottomrule
+\end{tabular}

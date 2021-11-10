@@ -1,0 +1,36 @@
+\begin{tabular}{llrr}
+\toprule
+                         content-security-policy\_c &                          content-security-policy\_n &  URLs &  sites \\
+\midrule
+report-uri https://www.instagram.com/security/c... & report-uri https://www.instagram.com/security/c... &   346 &      1 \\
+frame-src 'self' https://*.hel.fi https://*.use... & frame-src 'self' https://*.hel.fi https://*.use... &    83 &      1 \\
+frame-src 'self' https://*.hel.fi https://*.use... & frame-src 'self' https://*.hel.fi https://*.use... &    79 &      1 \\
+font-src https: data:; img-src https: data: www... & object-src 'none'; script-src https: 'unsafe-in... &    78 &      1 \\
+default-src * data: blob: 'self';script-src *.f... & default-src facebook.com *.facebook.com fbcdn.n... &    48 &      1 \\
+default-src * data: blob: 'self';script-src *.f... & default-src facebook.com *.facebook.com fbcdn.n... &    45 &      1 \\
+                              frame-ancestors self &                                              Empty &    31 &      1 \\
+default-src * data: blob: 'self';script-src *.f... &                                              Empty &    30 &      1 \\
+frame-ancestors 'self';, default-src * data: bl... &                                              Empty &    17 &      1 \\
+frame-ancestors 'self';, default-src * data: bl... & default-src facebook.com *.facebook.com fbcdn.n... &    16 &      1 \\
+frame-ancestors 'self' http://webvisor.com http... &                                              Empty &    14 &      1 \\
+default-src * data: blob: 'self';script-src *.f... &                                              Empty &    10 &      1 \\
+        frame-ancestors 'self' support.italki.com; &                                              Empty &    10 &      1 \\
+default-src * data: blob: 'unsafe-inline' 'unsa... & frame-ancestors 'self' https://*.nearpod.com/ h... &     8 &      1 \\
+frame-ancestors 'self' https://*.nearpod.com/ h... & default-src * data: blob: 'unsafe-inline' 'unsa... &     6 &      1 \\
+                                             Empty & block-all-mixed-content; frame-ancestors 'none'... &     6 &      1 \\
+upgrade-insecure-requests; block-all-mixed-content &                                              Empty &     5 &      1 \\
+                                             Empty & default-src 'self' * data: blob: filesystem: 'u... &     5 &      1 \\
+frame-ancestors https://ads.idntimes.com https:... &                                              Empty &     3 &      1 \\
+default-src * data: blob: 'self';script-src *.f... & default-src facebook.com *.facebook.com fbcdn.n... &     3 &      1 \\
+default-src *.facebook.com *.fbcdn.net *.instag... & default-src *.fbcdn.net *.instagram.com data: b... &     3 &      1 \\
+block-all-mixed-content; frame-ancestors 'none'... &                                              Empty &     3 &      1 \\
+frame-ancestors 'self';, default-src * data: bl... & frame-ancestors 'self';, default-src facebook.c... &     2 &      1 \\
+                                             Empty &                               frame-ancestors self &     2 &      1 \\
+block-all-mixed-content; default-src * data: 'u... &                                              Empty &     2 &      1 \\
+connect-src 'self' https://api.stripe.com https... & default-src 'self'; connect-src 'self' https://... &     2 &      1 \\
+default-src 'self' https://*.oreillyauto.com ht... &                                              Empty &     2 &      1 \\
+frame-ancestors 'self' https://*.justia.com htt... &                                              Empty &     2 &      1 \\
+sandbox allow-forms allow-same-origin allow-scr... & sandbox allow-forms allow-same-origin allow-scr... &     1 &      1 \\
+sandbox allow-forms allow-same-origin allow-scr... & sandbox allow-forms allow-same-origin allow-scr... &     1 &      1 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+celery = "*"
+selenium = "4.0.0.b3"
+mitmproxy = "*"
+django = "*"
+psycopg2 = "*"
+redis = "*"
+watchdog = "*"
+pyyaml = "*"
+argh = "*"
+publicsuffix2 = "*"
+tika = "*"
+flower = "*"
+uwsgitop = "*"
+
+[dev-packages]
+pycodestyle = "*"
+
+[requires]
+python_version = "3.9"

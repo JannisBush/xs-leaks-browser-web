@@ -1,0 +1,12 @@
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+ pruning & grouping &  all\_comb &  pred &  gt &  tp &   fp &  fpr &  fn &    tn &  fnr \\
+\midrule
+   basic &     both &     32952 &  5766 & 487 & 382 & 5384 & 0.17 & 105 & 27081 & 0.22 \\
+   basic &  firefox &     16476 &  2883 & 230 & 175 & 2708 & 0.17 &  55 & 13538 & 0.24 \\
+   basic &   chrome &     16476 &  2883 & 257 & 207 & 2676 & 0.16 &  50 & 13543 & 0.19 \\
+advanced &     both &      5766 &  5705 & 382 & 382 & 5323 & 0.99 &   0 &    61 & 0.00 \\
+advanced &  firefox &      2883 &  2857 & 175 & 175 & 2682 & 0.99 &   0 &    26 & 0.00 \\
+advanced &   chrome &      2883 &  2848 & 207 & 207 & 2641 & 0.99 &   0 &    35 & 0.00 \\
+\bottomrule
+\end{tabular}

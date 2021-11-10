@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body> 
+    <script>
+        // meta information
+        var test_url = "{{ test_url }}";
+        var inc_method = "{{ inc_method }}";
+        var inc_tag = "{{ inc_tag }}";
+        var inc_src = "{{ inc_src }}";
+        var extra = "{{ extra }}";
+    </script>
+
+    {% if inc_method == "window.open" %}
+        <script>
+            // Django comment: safe is needed to not escape & for GET parameters
+            var win = open("{{ test_url |safe }}");
+        </script>
+    {% elif "iframe" in inc_method %}
+        <{{ inc_tag}} {{ extra }} name="test_name" id="test_elem"></{{ inc_tag}}>
+        <script>
+            var win = open("{{ test_url |safe }}", "test_name");
+        </script>
+    {% else %}
+        <{{ inc_tag}} {{ inc_src}}="{{ test_url }}" {{ extra }} id="test_elem"></{{ inc_tag}}>
+        
+    {% endif %} 
+
+</body>
+
+</html>

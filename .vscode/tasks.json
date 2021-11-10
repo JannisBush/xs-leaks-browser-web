@@ -1,0 +1,99 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start grid",
+            "type": "shell",
+            "command": "source .env && cd automator/browsers && docker-compose -f docker-compose.yml up",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "dev"
+            },
+            // "runOptions": {
+            //     "runOn": "folderOpen"
+            // },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start leaky service",
+            "type": "shell",
+            "command": "source .env && cd leaky-service && pipenv run python manage.py runserver 0.0.0.0:8000",
+            // "command": "source .env && cd leaky-service && export VENV=$(pipenv --venv) && pipenv run uwsgi --ini uwsgi.ini",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "dev"
+            },
+            // "runOptions": {
+            //     "runOn": "folderOpen"
+            // }
+        },
+        {
+            "label": "Start leaker service",
+            "type": "shell",
+            "command": "source .env && cd leaker-service && pipenv run python manage.py runserver 0.0.0.0:8001",
+            //"command": "source .env && cd leaker-service && export VENV=$(pipenv --venv) && pipenv run uwsgi --ini uwsgi.ini",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "dev"
+            },
+            // "runOptions": {
+            //     "runOn": "folderOpen"
+            // }
+        },
+        {
+            "label": "Start db service",
+            "type": "shell",
+            "command": "source .env && cd db-server && pipenv run python manage.py runserver 0.0.0.0:8002",
+            //"command": "source .env && cd db-server && export VENV=$(pipenv --venv) && pipenv run uwsgi --ini uwsgi.ini",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "group": "dev"
+            },
+            // "runOptions": {
+            //     "runOn": "folderOpen"
+            // }
+        },
+        {
+            "label": "Start jupyter",
+            "type": "shell",
+            "command": "source .env && cd analysis && export VENV=$(pipenv --venv) && pipenv run jupyter lab",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true,
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test browsers",
+            "type": "shell",
+            "command": "source .env && cd automator && ./run.sh ${input:mode}",
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "mode",
+            "type": "pickString",
+            "description": "Chose the mode",
+            "options": [
+                "local_grid",
+                "tor",
+                "browserstack",
+                "chrome"
+            ],
+            "default": "local_grid",
+        }
+    ]
+}

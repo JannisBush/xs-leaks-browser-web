@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "/home/jannis/.local/share/virtualenvs/main-zCc3g8zz/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.formatting.provider": "black",
+    "ptyhon.formatting.blackArgs": ["--line-length=119"],
+    "python.linting.flake8Args": ["--max-line-length=120"],
+    "python.linting.pep8Args": ["--max-line-length=120"],
+    "python.linting.pycodestyleArgs": ["--max-line-length=119"]
+}

@@ -1,0 +1,413 @@
+<html>
+<head>
+    {% if csp %}
+        <meta http-equiv="Content-Security-Policy" content="{{ csp | safe}}"> // We need to make csp safe? otherwise '' is escaped and it does not work anymore?
+    {% endif %}
+</head>
+<body> 
+    <script>
+        // meta information
+        var test_url = "{{ test_url }}";
+        var inc_method = "{{ inc_method }}";
+        var inc_tag = "{{ inc_tag }}";
+        var inc_src = "{{ inc_src }}";
+        var hash = "{{ hash }}";
+        var extra = "{{ extra }}";
+        var wait_time = parseInt("{{ wait_time }}");
+        var browser = "{{ browser }}";
+        var version = "{{ version }}"; 
+        var log_server = "{{ log_server }}";
+        var url_dict_version = "{{ url_dict_version }}";
+        var headless = "{{ headless }}";
+        var retest = "{{ retest }}";
+        var site = "{{ site }}";
+        var cookies = "{{ cookies }}";
+        var win;
+        var start_time = Date.now();
+        var loading_time;
+        var complete_time;
+
+        // EF - events fired
+        var event_list = [];
+        var event_set = new Set();
+
+        var record_event = function(event) {
+            var event_type = event.type;
+            console.log(event_type);
+            event_list.push(event_type);
+            event_set.add(event_type);
+        };
+
+        
+        var data = {
+            // Object properties
+            "op_frame_count": undefined,
+            "op_win_window": undefined,
+            "op_win_CSS2Properties": undefined,
+            "op_win_origin": undefined,
+            "op_win_opener": undefined,
+            "op_win_history_length": undefined,
+            "op_el_height": undefined,
+            "op_el_width": undefined,
+            "op_el_naturalHeight": undefined,
+            "op_el_naturalWidth": undefined,
+            "op_el_videoWidth": undefined,
+            "op_el_videoHeight": undefined,
+            "op_el_duration": undefined,
+            "op_el_networkState": undefined,
+            "op_el_readyState": undefined,
+            "op_el_buffered": undefined,
+            "op_el_paused": undefined,
+            "op_el_seekable": undefined,
+            "op_el_sheet": undefined,
+            "op_el_media_error": undefined,
+	    "op_el_contentDocument": undefined,
+            // Global properties            
+            'gp_window_onerror': [],
+            'gp_window_onblur': undefined,
+            'gp_window_postMessage': [],
+            'gp_window_getComputedStyle': {},
+            'gp_window_hasOwnProperty': {},
+            'gp_download_bar_height': undefined,
+            'gp_securitypolicyviolation': undefined,
+        };
+
+        var count_frames = function(win_elem) {
+            var frame_count = undefined;         
+            try {
+                if (win) {  
+                    frame_count = win.window.length;
+                } else {
+                    frame_count = win_elem.contentWindow.length;
+                }   
+            } catch (error) {
+                console.log(error);
+                frame_count = "Not possible";
+            } 
+            data["op_frame_count"] = frame_count;
+        };
+
+        // for COOP secure context is necessary (e.g., localhost or https)
+        var check_window = function() {
+            if (win) {
+                // win.window
+                if (win.window === null) {
+                    data["op_win_window"] = "js-null";
+                } else {
+                    try {
+                        data["op_win_window"] = "win.window.name='" + win.window.name + "'";
+                    } catch (error) {
+                        console.log(error);
+                        data["op_win_window"] = "Access to win.window.name denied";
+                    }
+                }
+                // win.CSS2Properties
+                try {
+                    var test = win.CSS2Properties;
+                    data["op_win_CSS2Properties"] = "Access possible";
+                } catch (error) {
+                    console.log(error);
+                    data["op_win_CSS2Properties"] = "Access denied";
+                }
+
+                // win.origin
+                try {
+                    console.log(win.origin);
+                    data["op_win_origin"] = "Access possible";
+                } catch (error) {
+                    console.log(error);
+                    data["op_win_origin"] = "Access denied";
+                }
+
+                // win.opener
+                try {
+                    console.log(win.opener);
+                    if(!win.opener) {
+                        data["op_win_opener"] = "evaluates to false"; // usually null (due to COOP or set by JS)
+                    } else {
+                        data["op_win_opener"] = "evaluates to true"; // access is allowed (references to self)
+                    }
+                } catch (error) {
+                    console.log(error);
+                    data["op_win_opener"] = "error occured"; // either win does not exist or access denied
+                }
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+
+        var check_dimensions = function(element) {
+            var props = ["height", "width", "naturalHeight", "naturalWidth", "videoWidth", "videoHeight", "duration", "networkState", "readyState", "buffered", "paused", "seekable", "contentDocument"];
+            var dimensions = {};
+            for (var prop of props) {
+                data["op_el_" + prop]= element[prop];
+                dimensions[prop] = element[prop];
+            }
+            console.log(dimensions);
+        };
+
+        var check_sheet = function(element) {
+            var sheet = element.sheet;
+            data["op_el_sheet"] = sheet;
+        };
+
+        var check_media_error = function(element) {
+            var media_error = element.error;
+            data["op_el_media_error"] = media_error;
+        };
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.log(message, source, lineno, colno, error);
+            data["gp_window_onerror"].push([message, lineno, colno]);
+            return true;
+        };
+
+        window.onblur = function() {
+            console.log("gp_window_onblur");
+            data["gp_window_onblur"] = hash;
+            window.focus();
+        };
+
+        // we need a short delay? to give the other page time to send a message?
+        window.addEventListener("message", function(event) {
+            console.log(event);
+            data["gp_window_postMessage"].push("Message: " + event.data + " Origin: " + event.origin);
+        })
+ 
+        // Only works for our test site, for real websites we need to use a real XSSI/CSS technique
+        var check_css = function(elements) {
+            var css_vals = {};
+            for ( var el of elements) {
+                var comp_styles = window.getComputedStyle(el);
+                css_vals[el.tagName] = comp_styles.getPropertyValue("color");
+            };
+            data["gp_window_getComputedStyle"] = css_vals;
+        };
+
+        // Only works for our test site, for real websites a proper XSSI technique needs to be used (e.g., Object.getOwnPropertyNames(window))
+        var check_xssi = function(vars) {
+            var var_vals = {};
+            for (var v of vars) {
+                var var_text = "Var " + v + " ";
+                var var_exist = window.hasOwnProperty(v);
+                var_vals[v] = var_exist ? var_text + "exist. Value: " + window[v]:  var_text + "does not exist";
+            }
+            data["gp_window_hasOwnProperty"] = var_vals;
+        };
+
+        // download bar detection 
+        // False positives due to the fact that the "this browser is being automated" bar is unstable (sometimes appears/disappears randomly, no good way to disable the bar)
+        // Problem the download bar in chrome is opened and stays open (CTRL+j,CTRL+W) can close the bar, but this does not work in Selenium (as a feature one cannot interact with the browser)
+        // Only works in headfull browsers, Closing of the bar possible with injected js code using selenium
+        var screen_height = window.innerHeight;
+
+        // Needs a csp to work 
+        // Alternatively one could use report-uri
+        window.addEventListener("securitypolicyviolation", function(e) {
+            console.log(e);
+            // Only log some of the violation propeties (otherwise it would be huge)
+            data['gp_securitypolicyviolation'] = "URL: " + e.blockedURI + " Directive: " + e.effectiveDirective + " StatusCode: " + e.statusCode;
+        });
+        
+
+        // save results
+        var save_results = function() {
+            d = {};
+            d["browser"] = {
+                "browser": browser,
+                "version": version,
+                "headless": headless,
+            }
+            d["test"] = {
+                "test_url": test_url,
+                "inc_method": inc_method,
+                "url_dict_version": url_dict_version,
+            }
+            d["loading_time"] = loading_time;
+            d["apg_url"] = window.location.href;
+            d["events"] = {
+                "event_set": [...event_set].sort(),
+                "event_list": event_list,
+                "load_count": event_list.filter(el => el === "load").length,
+            }
+            d["gp"] = {};
+            d["op"] = {};
+            d["win"] = {};
+            d["retest"] = retest;
+            d["site"] = site;
+            d["cookies"] = cookies;
+            for (var key in data){
+                if (data[key] === undefined) {
+                    data[key] = "js-undefined";
+                } else if (data[key] === null) {
+                    data[key] = "js-null";
+                } else if (Number.isNaN(data[key])) {
+                    data[key] = "js-NaN";
+                }
+                if (key.startsWith("gp")) {
+                    d["gp"][key] = data[key];
+                } else if (key.includes("win") || key.includes("frame")){
+                    d["win"][key] = data[key];
+                } else if (key.startsWith("op")) {
+                    d["op"][key] = data[key];
+                }
+            }
+
+            // Custom toJSON methods for all properties that do not play well with JSON.stringify by default
+            MediaError.prototype.toJSON = function() {
+                return {
+                    code: this.code,
+                    message: this.message,
+                }
+            }
+            TimeRanges.prototype.toJSON = function() {
+                return {
+                    length: this.length,
+                }
+            }
+            var larger_bar = "Download bar height: " + ((data["gp_download_bar_height"] > 45)? "larger 45; " : "smaller 45; ") + data["gp_download_bar_height"]; 
+
+            complete_time = Date.now() - start_time;
+            d["complete_time"] = complete_time;
+
+            // Remove unstable methods for the dynamic confirmation
+            // Are these all? maybe add smooth version insteads
+            // e.g., event_set smooth (is load in there, is error in there), postMessage smooth (received=yes/no), ...
+            if (site !== "") {
+                // d["events"]["event_list"] = "";
+                d["gp"]["gp_window_onblur"] = "js-undefined";
+                d["gp"]["gp_download_bar_height"] = 0;
+                // d["win"]["op_win_CSS2Properties"] = "";
+                // d["win"]["op_win_history_length"] = 0;
+                // d["win"]["op_win_opener"] = "";
+                // if (inc_method === "window.open") {
+                    // d["win"]["op_win_window"] = "";
+                    // d["win"]["op_win_origin"] = "";
+                    // if (browser === "chrome") {
+                        // d["win"]["op_frame_count"] = 0;  // reevaluate this? this might be the only good working method today!
+                    // }
+                // }
+            }
+
+            data = JSON.stringify(d);
+            fetch(log_server, {
+                "method": "POST",
+                "mode": "no-cors",
+                body: data
+            }).then(function(resp) {
+
+                document.title = "Information success: " + larger_bar;
+                return true;
+            }).catch(function(err) {
+                document.title = "Information err: " + larger_bar;
+                return true;
+            })
+        };
+        
+        var check_history = function() {
+            // win.history.length
+            try {
+                if (win.history) {
+                    data["op_win_history_length"] = win.history.length;
+                } else {
+                    data["op_win_history_length"] = "win.history is undefined";
+                }
+            } catch (error) {
+                console.log(error);
+                data["op_win_history_length"] = "error occured: " + error.name + ": " + error.message;
+            } finally {
+                // win.close(); // only works if allowed to close (not the case for COOP), for such cases close with Selenium; nevermind always close with selenium
+                log_and_save_results();
+            }
+            
+        }
+        
+        var log_and_save_results = function() {
+            data["gp_download_bar_height"] = screen_height - window.innerHeight;
+            // Does not work as js is not allowed to open local files
+            // if (data["gp_download_bar_height"] > 0) {
+            //         window.open("chrome://downloads/");
+            // }
+            console.log(event_list);
+            console.log(event_set);
+            console.log(data);
+
+            // stop onblur
+            window.onblur = null;
+
+            // save the results here
+            save_results();
+        }
+
+        // check all results
+        var check_results = function() {
+            var leak_elem = document.getElementById("test_elem");
+
+            if (leak_elem) {
+                //count_frames(leak_elem.contentWindow);
+                check_dimensions(leak_elem);
+                check_sheet(leak_elem);
+                check_media_error(leak_elem);
+                check_css([document.getElementById("css_test")]);
+                check_xssi(["a"]);
+            };                
+            
+            count_frames(leak_elem);
+            var win_exist = check_window();
+            
+            if (win_exist) {
+                win.location.replace("about:blank") // needs some time, so we need to wait
+                // wait until win is about:blank (20ms enough?)
+                // if error logged in op_win_history_length, probably too short, other reason for error is COOP
+                setTimeout(check_history,   wait_time);
+            } else {
+                log_and_save_results();
+            };
+            
+        };
+
+        // Record information after page is fully loaded
+        window.addEventListener('load', (event) => {
+            loading_time = Date.now() - start_time;
+            console.log('page is fully loaded');
+            
+            // delay here to wait for postMessages, window open etc?
+            // only for some inclusion methods to make other inclusion methods faster
+            // audio and video need this delay too? (for error events, browser seems to wait for a short time?
+            // embed and object can also receive postMessages?
+            // load event does not wait until loading of link-prefetch
+            // in chrome securitypolicyviolation might also only fire after the load event, safer solution: always wait a bit?
+            var delay_inc_methods = ["iframe", "window.open", "iframe-csp"]
+            if (delay_inc_methods.indexOf(inc_method) != -1) {
+                setTimeout(check_results, wait_time*1.5);
+            } else {
+                //check_results();
+                setTimeout(check_results, wait_time);
+            };
+        });
+
+    </script>
+
+    {% if inc_method == "window.open" %}
+        <script>
+            // Django comment: safe is needed to not escape & for GET parameters
+            var win = open("{{ test_url |safe }}#{{ hash }}");
+        </script>
+    {% elif "iframe" in inc_method %}
+        <{{ inc_tag}} {{ extra }} name="test_name" id="test_elem" onerror="record_event(event)" onload="record_event(event)" onloadedmetadata="record_event(event)" onstalled="record_event(event)" onsuspend="record_event(event)"></{{ inc_tag}}>
+        <script>
+            var win = open("{{ test_url |safe }}#{{ hash }}", "test_name");
+            //document.getElementById("test_elem").src = "{{test_url }}#{{ hash }}";
+        </script>
+    {% else %}
+        <{{ inc_tag}} {{ inc_src}}="{{ test_url }}#{{ hash }}" {{ extra }} id="test_elem" onerror="record_event(event)" onload="record_event(event)" onloadedmetadata="record_event(event)" onstalled="record_event(event)" onsuspend="record_event(event)"></{{ inc_tag}}>
+        
+    {% endif %} 
+
+    <h1 id="css_test"></h1>
+
+</body>
+
+</html>

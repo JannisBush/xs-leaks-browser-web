@@ -1,0 +1,19 @@
+0,1,2,3,4,5,6,7,8,9,10
+leak1,EF_CtMIsmatchImg,Image/No image,img,nan,"img, script, embed-img","img, script","img, embed-img, script","img, script",nan,nan
+leak2,JSError,JS error/No error,script,nan,script,script,script,script,nan,nan
+leak3,Timing,Timing diff,-,Pruned,-,-,-,-,nan,nan
+leak4,EF_CtMismatchScript,Script/No script,script,nan,"window.open, script","window.open, script",Does not work (CORB?),script,nan,nan
+leak5,CSSPropRead,CSS1/CSS2,link,nan,"link-stylesheet, script","link-stylesheet, script",Does not work (not implemented),Does not work (not implemented),nan,nan
+leak6,EF_StatusErrorScript,JS/Error code,script,nan,"script, link-stylesheet","script, audio","link-stylesheet, script","audio, script",nan,nan
+leak7,JSObjectRead,JS1/JS2,script,nan,script,script,Does not work (not implemented),Does not work (not implemented),nan,nan
+leak8,OP_FrameCount,Frame1/Frame2,frame/window.open,nan,"iframe-csp, script, window.open, link-stylesheet","iframe-csp, window.open, audio, script","window.open, iframe-csp","windwo.open, iframe-csp",nan,nan
+leak9,CSPViolation,SameSite red/Cross-Site redirect,iframe-csp,nan,iframe-csp,iframe-csp,iframe-csp,iframe-csp,nan,nan
+leak10,EF_CtMismatchVideo,Video/No video,video,nan,"script, audio, video","script, audio, video","audio, script, video","audio, script, video",nan,nan
+leak11,OP_LinkSheet,CSS/No CSS,link,nan,"iframe-csp, link-stylesheet, script","iframe-csp, audio, link-stylesheet, script",script,link-stylesheet,nan,nan
+leak12,OP_WindowProperties,Frames/XFO-deny,iframe,nan,window.open,"window.open, script",window.open,window.open,nan,nan
+leak13,OP_MediaStatus,Video/No video,video,nan,"audio, link-stylesheet, video","audio, video","audio, link-stylesheet, video","audio, video",nan,nan
+leak14,sec_fetch_only,EF_CtMismatchImg if cross-site,-,Pruned,-,-,-,-,nan,nan
+leak15,coop_leak,COOP/No COOP,window.open,nan,window.open,window.open,window.open,window.open,nan,nan
+leak16,OP_XfoIFrame,Frames/XFO-deny,window.open,nan,window.open,"window.open, script",window.open,window.open,nan,nan
+leakOld,JSError_old,One error/two erros,-,nan,"window.open, script","window.open, script",Does not work (expected),Does not work (expected),nan,nan
+URL,Leak Channel (COSI),respA/respB,expected inc,Basic pruning,tree chrome,working firefox,working chrome,working firefox,nan,nan

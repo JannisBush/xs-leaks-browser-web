@@ -1,0 +1,9 @@
+[Unit]
+Description=Kill old docker containers
+StartLimitBurst=5
+StartLimitIntervalSec=30
+[Service]
+Restart=on-failure
+RestartSec=5s
+
+ExecStart=/home/xsleaker/main/automator/browsers/watchdog.py

@@ -1,0 +1,27 @@
+version: "3"
+services:
+  selenium-hub2:
+    image: selenium/hub:3.141.59-20210422
+    container_name: selenium-hub2
+    ports:
+      - "4444:4444"
+    environment:
+      #- GRID_TIMEOUT=10
+      #- GRID_BROWSER_TIMEOUT=2
+      - JAVA_OPTS=-Xmx512m
+      - SE_OPTS=-browserTimeout 5 -timeout 10 -newSessionWaitTimeout 10
+  chrome:
+    image: selenium/node-chrome-debug:3.141.59-20210422
+    depends_on:
+      - selenium-hub2
+    environment:
+      - HUB_HOST=selenium-hub2
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=1
+      - NODE_MAX_SESSION=1
+      - SCREEN_WIDTH=1366
+      - SCREEN_HEIGHT=768
+      - SCREEN_DEPTH=24
+      - START_XVFB=true
+    ports:
+      - "5900:5900"

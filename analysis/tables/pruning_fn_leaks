@@ -1,0 +1,22 @@
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+ pruning &        grouping &  all\_comb &  pred &  gt &  tp &    fp &  fpr &  fn &     tn &  fnr \\
+\midrule
+   basic &            both &    395424 & 69192 & 981 & 781 & 68411 & 0.17 & 200 & 326032 & 0.20 \\
+advanced &            both &     69192 & 17052 & 781 & 747 & 16305 & 0.24 &  34 &  52106 & 0.04 \\
+advanced &         firefox &     34596 &  9062 & 350 & 342 &  8720 & 0.25 &   8 &  25526 & 0.02 \\
+advanced &          chrome &     34596 &  7990 & 431 & 405 &  7585 & 0.22 &  26 &  26580 & 0.06 \\
+advanced &           audio &      5766 &   475 &   4 &   0 &   475 & 0.08 &   4 &   5287 & 1.00 \\
+advanced &           embed &      5766 &  1340 &  16 &  12 &  1328 & 0.23 &   4 &   4422 & 0.25 \\
+advanced &       embed-img &      5766 &  1382 &  14 &  14 &  1368 & 0.24 &   0 &   4384 & 0.00 \\
+advanced &          iframe &      5766 &  2296 & 172 & 169 &  2127 & 0.38 &   3 &   3467 & 0.02 \\
+advanced &      iframe-csp &      5766 &  2304 & 163 & 161 &  2143 & 0.38 &   2 &   3460 & 0.01 \\
+advanced &             img &      5766 &   466 &   6 &   6 &   460 & 0.08 &   0 &   5300 & 0.00 \\
+advanced &   link-prefetch &      5766 &   386 &  15 &   2 &   384 & 0.07 &  13 &   5367 & 0.87 \\
+advanced & link-stylesheet &      5766 &   539 &  50 &  48 &   491 & 0.09 &   2 &   5225 & 0.04 \\
+advanced &          object &      5766 &   504 &  15 &  14 &   490 & 0.09 &   1 &   5261 & 0.07 \\
+advanced &          script &      5766 &  2376 &  73 &  73 &  2303 & 0.40 &   0 &   3390 & 0.00 \\
+advanced &           video &      5766 &   386 &   5 &   0 &   386 & 0.07 &   5 &   5375 & 1.00 \\
+advanced &     window.open &      5766 &  4598 & 248 & 248 &  4350 & 0.79 &   0 &   1168 & 0.00 \\
+\bottomrule
+\end{tabular}

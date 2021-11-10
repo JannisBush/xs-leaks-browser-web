@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+psycopg2 = "*"
+jupyter = "*"
+h2o = "==3.32.1.3"
+qgrid = "*"
+jupyterlab = "*"
+jupyterlab-vim = "*"
+modin = {extras = ["ray"], version = "*"}
+ray = {extras = ["default"], version = "*"}
+ipysheet = "*"
+celery = "*"
+publicsuffix2 = "*"
+matplotlib = "*"
+textdistance = {extras = ["extras"], version = "*"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
